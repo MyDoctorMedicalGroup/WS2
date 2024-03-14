@@ -9,11 +9,6 @@ import shutil
 import json
 from datetime import datetime
 import matplotlib.pyplot as plt
-try:
-    from google.colab import files
-    from google.colab import userdata
-except:
-    pass
 import subprocess
 
 # Correo
@@ -41,8 +36,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.edge.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import threading
@@ -188,7 +182,7 @@ def opciones_driver():
         Directory where downloads will be saved
     """
     # Web driver
-    options = webdriver.ChromeOptions()
+    options = Options()
     options.add_argument('--headless') # Avoid colab to crash
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage') # Avoid unexpected errors
