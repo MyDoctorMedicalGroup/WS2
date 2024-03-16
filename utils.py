@@ -118,7 +118,7 @@ def dividir_diccionario(dic, n):
     print(division)
     return [dict((k, dic[k]) for k in keys[i:i + division]) for i in range(0, len(keys), division)]
 
-def send_email(address, password, files_list=[], emails_list=[]):
+def send_email(address, password, subject, text_in, files_list=[], emails_list=[]):
     """Send an email (Gmail only) depending if there are files listed or not
     Parameters
     ----------
@@ -126,6 +126,10 @@ def send_email(address, password, files_list=[], emails_list=[]):
         Gmail that will send the email
     password: str
         third party password that is created in https://myaccount.google.com/apppasswords (remember to have 2 step pass active and remember your API key)
+    subject: str
+        subject for email
+    text_in: str
+        text to write in email
     files_list: list
         Files that will be send
     emails_list: list
@@ -149,8 +153,8 @@ def send_email(address, password, files_list=[], emails_list=[]):
       message=MIMEMultipart()
       message['From'] = sender_address
       if len(files_list)>0:
-        message['Subject'] = 'Fallo en script de Athena reports - No total de archivos'
-        mail_content = 'Este correo es para indicarle que el script de Athena reports no ha logrado descargar en su totalidad los informes esperados, una posibilidad es volver a ejecutar el script empleando el archivo "no logro.xlsx"'
+        message['Subject'] = subject
+        mail_content = text_in
         message.attach(MIMEText(mail_content,'plain'))
         for f in files or []:
             with open(f, "rb") as fil:
@@ -160,13 +164,64 @@ def send_email(address, password, files_list=[], emails_list=[]):
                     'content-disposition', 'attachment', filename=basename(f) )
             message.attach(attachedfile)
       else:
-        message['Subject'] = 'Fallo en script de Athena reports - Zona no válida'
-        mail_content = 'Este correo es para indicarle que el script de Athena no completó su labor debido a no pertenecer a una zona IP válida'
+        message['Subject'] = subject
+        mail_content = text_in
         message.attach(MIMEText(mail_content,'plain'))
       text = message.as_string()
       session.sendmail(sender_address, correo, text)
       print("Correo enviado")
     session.quit()
+
+def download_sharepoint(ruta,file):
+    """Download file from SharePoint
+    Parameters
+    ----------
+    ruta: str
+        Path where file is stored
+    password: str
+        File that will be downloaded
+
+    Returns
+    -------
+    None
+    """
+    folder = site.Folder(ruta)
+    local_file_path = file
+    file_content = folder.get_file(file)
+    with open(local_file_path, 'wb') as file:
+        file.write(file_content)
+
+def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,relative_url):
+    """Upload file to SharePoint
+    Parameters
+    ----------
+    url: str
+        SharePoint origin URL and path
+    nombres_archivos: list
+        List of files to upload
+    user_sharepoint: str
+        SharePoint username
+    contra_sharepoint: str
+        Sharepoint password
+    relative_url: str
+        Aditional path to url
+
+    Returns
+    -------
+    None
+    """
+    ctx_auth = AuthenticationContext(url)
+    for file_path in nombres_archivos:
+      if ctx_auth.acquire_token_for_user(user_sharepoint, contra_sharepoint):
+          ctx = ClientContext(url, ctx_auth)
+          with open(file_path, 'rb') as content_file:
+              file_content = content_file.read()
+          dir, name = os.path.split(file_path)
+          target_folder = ctx.web.get_folder_by_server_relative_url(relative_url)
+          target_file = target_folder.upload_file(name, file_content).execute_query()
+          print(f"Archivo {name} subido a {target_folder.serverRelativeUrl}")
+      else:
+          print("Error en la autenticación")
 
 def opciones_driver():
     """Send an email (Gmail only) depending if there are files listed or not
