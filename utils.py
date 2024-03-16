@@ -172,7 +172,7 @@ def send_email(address, password, subject, text_in, files_list=[], emails_list=[
       print("Correo enviado")
     session.quit()
 
-def download_sharepoint(ruta,file):
+def download_sharepoint(ruta,file,site):
     """Download file from SharePoint
     Parameters
     ----------
@@ -180,6 +180,8 @@ def download_sharepoint(ruta,file):
         Path where file is stored
     password: str
         File that will be downloaded
+    site: shareplum.site object
+        Site where Shareplum is focused to download
 
     Returns
     -------
