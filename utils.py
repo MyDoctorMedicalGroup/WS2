@@ -245,7 +245,7 @@ def opciones_driver():
     options.add_argument('--disable-dev-shm-usage') # Avoid unexpected errors
     options.add_argument('--window-size=1920,1080') # Specify window size
     options.add_argument("--incognito") # Necessary for parallelization
-    ruta_descargas = os.getcwd()+"/Athena_reports"
+    ruta_descargas = os.getcwd()+"\Athena_reports"
     # Set download route
     try:
         os.mkdir(ruta_descargas)
