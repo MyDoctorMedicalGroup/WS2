@@ -291,7 +291,7 @@ def athena_enter(k,ruta_descargas,options,user,contra):
     """
     time.sleep(k*10)
     print("Entering with window #", k)
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Edge(options=options)
     #print("va")
     os.chdir(ruta_descargas)
     #print("va2")
