@@ -41,7 +41,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import threading
 
-def espera(driver,tiempo,com):
+def espera(driver,tiempo,com,excep=""):
     """Make the driver wait for specified seconds (at most) while executing an action
 
     Parameters
@@ -52,7 +52,8 @@ def espera(driver,tiempo,com):
         The time (in seconds) multiplied by 5 is the time will the driver wait at most (checking each 5 seconds)
     com : str
         The action the driver will try
-
+    excep : str
+        The action that will be an exception (For "Athena_Medical_Records" only)
     Returns
     -------
     None
@@ -65,11 +66,19 @@ def espera(driver,tiempo,com):
             a = False
             #print("al fin...")
         except:
+            if excep!="":
+                try:
+                    exec(excep)
+                    if len(b)==1:
+                        a=False
+                        return False
+                except:
+                    pass
             time.sleep(5)
             #print("esperando")
             p += 1
             pass
-
+            
 def dividir_lista(lista, n):
     """Make the list be divided in lenght of the list by n (approximately) for getting elements for each window in driver
     if the list have 12 elements -> [1, 2, 3, ..., 12]
