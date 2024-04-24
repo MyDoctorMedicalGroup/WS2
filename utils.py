@@ -202,7 +202,7 @@ def download_sharepoint(ruta,file,site):
     with open(local_file_path, 'wb') as file:
         file.write(file_content)
 
-def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,relative_url):
+def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,relative_url,go=0):
     """Upload file to SharePoint
     Parameters
     ----------
@@ -216,6 +216,8 @@ def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,rel
         Sharepoint password
     relative_url: str
         Aditional path to url
+    go: int
+        Check if ignore file that contains " - 20" in name
 
     Returns
     -------
@@ -223,16 +225,20 @@ def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,rel
     """
     ctx_auth = AuthenticationContext(url)
     for file_path in nombres_archivos:
-      if ctx_auth.acquire_token_for_user(user_sharepoint, contra_sharepoint):
-          ctx = ClientContext(url, ctx_auth)
-          with open(file_path, 'rb') as content_file:
-              file_content = content_file.read()
-          dir, name = os.path.split(file_path)
-          target_folder = ctx.web.get_folder_by_server_relative_url(relative_url)
-          target_file = target_folder.upload_file(name, file_content).execute_query()
-          print(f"Archivo {name} subido a {target_folder.serverRelativeUrl}")
-      else:
-          print("Error en la autenticación")
+        if go!=0:
+            if " - 20" in file_path:
+                print("ignorando")
+                continue       
+        if ctx_auth.acquire_token_for_user(user_sharepoint, contra_sharepoint):
+            ctx = ClientContext(url, ctx_auth)
+            with open(file_path, 'rb') as content_file:
+                file_content = content_file.read()
+            dir, name = os.path.split(file_path)
+            target_folder = ctx.web.get_folder_by_server_relative_url(relative_url)
+            target_file = target_folder.upload_file(name, file_content).execute_query()
+            print(f"Archivo {name} subido a {target_folder.serverRelativeUrl}")
+        else:
+            print("Error en la autenticación")
 
 def opciones_driver():
     """Send an email (Gmail only) depending if there are files listed or not
