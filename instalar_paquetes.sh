@@ -7,3 +7,4 @@ pip install pandas
 pip install shareplum
 pip install requests
 pip install paramiko
+pip install openai
