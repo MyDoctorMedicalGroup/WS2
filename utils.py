@@ -241,7 +241,7 @@ def upload_sharepoint(url,nombres_archivos,user_sharepoint,contra_sharepoint,rel
         else:
             print("Error en la autenticación")
 
-def opciones_driver():
+def opciones_driver(a=0):
     """Send an email (Gmail only) depending if there are files listed or not
     Parameters
     ----------
@@ -256,7 +256,10 @@ def opciones_driver():
     """
     # Web driver
     options = Options()
-    options.add_argument('--headless') # Avoid colab to crash
+    if a==0:
+        options.add_argument('--headless') # Avoid colab to crash
+    else:
+        pass
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage') # Avoid unexpected errors
     options.add_argument('--window-size=1920,1080') # Specify window size
