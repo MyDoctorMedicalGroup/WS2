@@ -330,3 +330,45 @@ def athena_enter(k,ruta_descargas,options,user,contra):
           red+=1
           driver = webdriver.Edge(options=options)
     return driver
+
+def optimum_enter(k,ruta_descargas,options,user,contra):
+    """Enter to Optimum website
+    Parameters
+    ----------
+    k: int
+        number of window
+    ruta_descargas: str
+        Download path
+    options: WebDriver options
+        Webdriver options
+    user: str
+        Optimum user
+    contra: str
+        Optimum password
+
+    Returns
+    -------
+    driver: WebDriver
+        Webdriver with Athena website in
+    """
+    time.sleep(k*10)
+    print("Entering with window #", k)
+    driver = webdriver.Edge(options=options)
+    os.chdir(ruta_descargas)
+    driver.get('https://optprovider.prod.healthaxis.net/login/')
+    time.sleep(10)
+    driver.find_element(By.XPATH, '//input[@name="userName"]').send_keys(user_optimum)
+    driver.find_element(By.XPATH, '//input[@name="password"]').send_keys(contra_optimum)
+    driver.find_element(By.XPATH, '//button[@id="submitLoginForm"]').click()
+    time.sleep(5)    
+    driver.find_element(By.XPATH, '//button[@ng-class="okBtnClass"]').click()
+    time.sleep(1)
+    driver.refresh()
+    time.sleep(1)
+    a=driver.find_elements(By.XPATH,"//a[@data-target='#authorization']")
+    a[1].click()
+    a=driver.find_elements(By.XPATH,"//a[@ui-sref='claimSearch()']")
+    a[0].click()
+    time.sleep(3)
+    print("There are", len(data))
+    return driver
