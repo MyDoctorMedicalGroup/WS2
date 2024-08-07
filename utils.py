@@ -370,5 +370,4 @@ def optimum_enter(k,ruta_descargas,options,user,contra):
     a=driver.find_elements(By.XPATH,"//a[@ui-sref='claimSearch()']")
     a[0].click()
     time.sleep(3)
-    print("There are", len(data))
     return driver
