@@ -11,6 +11,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import subprocess
 from openai import OpenAI
+import fitz
 
 # Correo
 import smtplib
