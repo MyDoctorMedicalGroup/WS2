@@ -8,3 +8,4 @@ pip install shareplum
 pip install requests
 pip install paramiko
 pip install openai
+pip install PyMuPDF
