@@ -310,8 +310,8 @@ def athena_enter(k,ruta_descargas,options,user,contra):
     red=0
     while a==True and red<=2:
       try:
-          #driver.get('https://athenanet.athenahealth.com/')
-          driver.get('https://identity.athenahealth.com/oauth2/auset0ja9xZ2Hniep296/v1/authorize?client%5Fid=0oaet0rfjNzyKCiQQ296&idp=&login%5Fhint=ANETUSERNAME&nonce=031d476cb678c4a0d9dd13b1634d5d492077c5704c0ad3832c9ae95214808934&prompt=login&redirect%5Furi=https%3A%2F%2Fathenanet%2Eathenahealth%2Ecom%2F1%2F1%2Flogin%2Foidc%2Eesp&response%5Fmode=form%5Fpost&response%5Ftype=code&scope=openid%20profile%20offline%5Faccess%20&sessionToken=&state=eyJGTEFHUyI6eyJDT0RFUEFTU1RIUk9VR0giOm51bGwsIkFORVRNRkFTSElNV0lER0VUIjoiIiwiTk9GUkFNRVNFVCI6bnVsbCwiREVQQVJUTUVOVElEIjpudWxsLCJERUVQTElOSyI6bnVsbH0sIkxPR0lOTUVUQURBVEEiOnsiVVNFUkFVVEhOVFlQRSI6Ik5PTlNTTyIsIkJBTk5FUlRZUEUiOiJsaXZlX2xvZ2luIn0sIkNTUkYiOiJlODEzZWQxMWY3M2ViMzllNTQwMWE0ZjdjM2ZmZGMwMSIsIlRBUkdFVFVSTCI6bnVsbH0')
+          driver.get('https://athenanet.athenahealth.com/')
+          #driver.get('https://identity.athenahealth.com/oauth2/auset0ja9xZ2Hniep296/v1/authorize?client%5Fid=0oaet0rfjNzyKCiQQ296&idp=&login%5Fhint=ANETUSERNAME&nonce=031d476cb678c4a0d9dd13b1634d5d492077c5704c0ad3832c9ae95214808934&prompt=login&redirect%5Furi=https%3A%2F%2Fathenanet%2Eathenahealth%2Ecom%2F1%2F1%2Flogin%2Foidc%2Eesp&response%5Fmode=form%5Fpost&response%5Ftype=code&scope=openid%20profile%20offline%5Faccess%20&sessionToken=&state=eyJGTEFHUyI6eyJDT0RFUEFTU1RIUk9VR0giOm51bGwsIkFORVRNRkFTSElNV0lER0VUIjoiIiwiTk9GUkFNRVNFVCI6bnVsbCwiREVQQVJUTUVOVElEIjpudWxsLCJERUVQTElOSyI6bnVsbH0sIkxPR0lOTUVUQURBVEEiOnsiVVNFUkFVVEhOVFlQRSI6Ik5PTlNTTyIsIkJBTk5FUlRZUEUiOiJsaXZlX2xvZ2luIn0sIkNTUkYiOiJlODEzZWQxMWY3M2ViMzllNTQwMWE0ZjdjM2ZmZGMwMSIsIlRBUkdFVFVSTCI6bnVsbH0')
           #print("yea", k)
           time.sleep(10)
           #driver.save_screenshot("aqui.png")
