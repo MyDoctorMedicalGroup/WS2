@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import subprocess
 from openai import OpenAI
 import fitz
+from openpyxl import load_workbook
 
 # Correo
 import smtplib
