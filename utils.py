@@ -13,6 +13,10 @@ import subprocess
 from openai import OpenAI
 import fitz
 from openpyxl import load_workbook
+import paramiko
+import requests
+from msal import ConfidentialClientApplication
+
 
 # Correo
 import smtplib
@@ -374,3 +378,104 @@ def optimum_enter(k,ruta_descargas,options,user,contra):
     a[0].click()
     time.sleep(3)
     return driver
+
+class SharePointClient:
+    def __init__(self, client_id, authority, client_secret, scope, sharepoint_site_url):
+        self.client_id = client_id
+        self.authority = authority
+        self.client_secret = client_secret
+        self.scope = scope
+        self.sharepoint_site_url = sharepoint_site_url
+        self.token_acceso = self.obtener_token_acceso()
+        self.site_id = self.obtener_site_id()
+        self.drive_id = self.obtener_drive_id()
+
+    # Método para obtener el token de acceso
+    def obtener_token_acceso(self):
+        app = ConfidentialClientApplication(self.client_id, authority=self.authority, client_credential=self.client_secret)
+        result = app.acquire_token_for_client(scopes=self.scope)
+        if "access_token" in result:
+            return result["access_token"]
+        else:
+            raise Exception("Error al obtener el token de acceso: ", result)
+
+    # Método para obtener el ID del sitio de SharePoint
+    def obtener_site_id(self):
+        url = f"https://graph.microsoft.com/v1.0/sites/{self.sharepoint_site_url}"
+        headers = {
+            'Authorization': f'Bearer {self.token_acceso}',
+            'Content-Type': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            site_info = response.json()
+            return site_info['id']
+        else:
+            raise Exception(f"Error al obtener el ID del sitio: {response.status_code} - {response.text}")
+
+    # Método para obtener el ID de la biblioteca de documentos (drive_id)
+    def obtener_drive_id(self):
+        url = f"https://graph.microsoft.com/v1.0/sites/{self.site_id}/drives"
+        headers = {
+            'Authorization': f'Bearer {self.token_acceso}',
+            'Content-Type': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            drives_info = response.json()
+            for drive in drives_info['value']:
+                if drive['name'] == "Documents":
+                    return drive['id']
+            raise Exception("No se encontró la biblioteca de documentos 'Documents'")
+        else:
+            raise Exception(f"Error al obtener la biblioteca de documentos: {response.status_code} - {response.text}")
+
+    # Método para obtener la lista de archivos en SharePoint
+    def get_sharepoint_filenames(self, folder_path):
+        url = f"https://graph.microsoft.com/v1.0/sites/{self.site_id}/drives/{self.drive_id}/root:/{folder_path}:/children"
+        headers = {
+            'Authorization': f'Bearer {self.token_acceso}',
+            'Content-Type': 'application/json'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            files_info = response.json()
+            return [item['name'] for item in files_info['value']]
+        else:
+            raise Exception(f"Error al obtener archivos de SharePoint: {response.status_code} - {response.text}")
+
+    # Método para subir archivos a SharePoint
+    def upload_sharepoint_file(self, folder_path, nombre_archivo):
+        #ruta_local = os.getcwd()
+        with open(nombre_archivo, 'rb') as file_content:
+            file_data = file_content.read()
+        upload_url = f"https://graph.microsoft.com/v1.0/sites/{self.site_id}/drives/{self.drive_id}/root:/{folder_path}/{nombre_archivo}:/content"
+        headers = {
+            'Authorization': f'Bearer {self.token_acceso}',
+            'Content-Type': 'application/octet-stream'
+        }
+        response = requests.put(upload_url, headers=headers, data=file_data)
+        if response.status_code == 201:
+            print(f"Archivo '{nombre_archivo}' subido correctamente a SharePoint.")
+            #os.remove(ruta_local)  # Eliminar el archivo local después de subirlo
+        else:
+            raise Exception(f"Error al subir el archivo '{nombre_archivo}': {response.status_code} - {response.text}")
+
+    # Método para descargar archivos de SharePoint
+    def download_sharepoint_file(self, folder_path, nombre_archivo):
+        ruta_local = os.path.join(os.getcwd(), nombre_archivo)
+        download_url = f"https://graph.microsoft.com/v1.0/sites/{self.site_id}/drives/{self.drive_id}/root:/{folder_path}/{nombre_archivo}:/content"
+        headers = {
+            'Authorization': f'Bearer {self.token_acceso}'
+        }
+        response = requests.get(download_url, headers=headers, stream=True)
+        if response.status_code == 200:
+            with open(ruta_local, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        file.write(chunk)
+            print(f"Archivo '{nombre_archivo}' descargado exitosamente a '{ruta_local}'.")
+        else:
+            raise Exception(f"Error al descargar el archivo '{nombre_archivo}': {response.status_code} - {response.text}")
+
+
