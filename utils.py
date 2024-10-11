@@ -16,7 +16,7 @@ from openpyxl import load_workbook
 import paramiko
 import requests
 from msal import ConfidentialClientApplication
-
+scope = ["https://graph.microsoft.com/.default"]
 
 # Correo
 import smtplib
