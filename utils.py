@@ -455,7 +455,7 @@ class SharePointClient:
             'Content-Type': 'application/octet-stream'
         }
         response = requests.put(upload_url, headers=headers, data=file_data)
-        if response.status_code == 201:
+        if response.status_code in [200, 201]:
             print(f"Archivo '{nombre_archivo}' subido correctamente a SharePoint.")
             #os.remove(ruta_local)  # Eliminar el archivo local después de subirlo
         else:
