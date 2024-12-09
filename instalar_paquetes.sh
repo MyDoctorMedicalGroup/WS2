@@ -11,3 +11,4 @@ pip install PyMuPDF
 pip install msal
 pip install pandas
 pip install matplotlib
+pip install openpyxl
