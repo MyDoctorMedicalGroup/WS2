@@ -9,3 +9,5 @@ pip install paramiko
 pip install openai
 pip install PyMuPDF
 pip install msal
+pip install pandas
+pip install matplotlib
