@@ -255,10 +255,8 @@ def opciones_driver(a=0):
 
     Returns
     -------
-    options: WebDriver options
-        Options for webdriver set
-    ruta_descargas: str
-        Directory where downloads will be saved
+    a: WebDriver Headless
+        0 headless, not 0 not headless
     """
     # Web driver
     options = Options()
@@ -278,6 +276,44 @@ def opciones_driver(a=0):
         pass
     prefs = {
         "download.default_directory": ruta_descargas,
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True
+    }
+    options.add_experimental_option("prefs", prefs)
+    return options, ruta_descargas
+
+def opciones_driver_many(k,a=0):
+    """Send an email (Gmail only) depending if there are files listed or not
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    k: Webdriver window
+        any int
+    a: WebDriver Headless
+        0 headless, not 0 not headless
+    """
+    # Web driver
+    options = Options()
+    if a==0:
+        options.add_argument('--headless') # Avoid colab to crash
+    else:
+        pass
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage') # Avoid unexpected errors
+    options.add_argument('--window-size=1920,1080') # Specify window size
+    options.add_argument("--incognito") # Necessary for parallelization
+    ruta_descargas = os.getcwd()+"\Athena_reports"
+    # Set download route
+    try:
+        os.mkdir(ruta_descargas)
+    except:
+        pass
+    prefs = {
+        "download.default_directory": os.path.join(ruta_descargas, str(k)),
         "download.prompt_for_download": False,
         "download.directory_upgrade": True,
         "safebrowsing.enabled": True
@@ -477,5 +513,4 @@ class SharePointClient:
             print(f"Archivo '{nombre_archivo}' descargado exitosamente a '{ruta_local}'.")
         else:
             raise Exception(f"Error al descargar el archivo '{nombre_archivo}': {response.status_code} - {response.text}")
-
 
