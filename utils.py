@@ -321,7 +321,7 @@ def opciones_driver_many(k,a=0):
     options.add_experimental_option("prefs", prefs)
     return options, os.path.join(ruta_descargas, str(k))
 
-def athena_enter(k,ruta_descargas,options,user,contra):
+def athena_enter(k,ruta_descargas,options,user,contra,b=0):
     """Enter to Athena website
     Parameters
     ----------
@@ -345,7 +345,8 @@ def athena_enter(k,ruta_descargas,options,user,contra):
     print("Entering with window #", k)
     driver = webdriver.Edge(options=options)
     #print("va")
-    os.chdir(ruta_descargas)
+    if b==0:
+        os.chdir(ruta_descargas)
     #print("va2")
     a = True
     red=0
